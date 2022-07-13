@@ -4,6 +4,7 @@
 
 package io.flutter.plugins.inapppurchase;
 
+import static io.flutter.plugins.inapppurchase.Translator.fromProductDetailsList;
 import static io.flutter.plugins.inapppurchase.Translator.fromPurchaseHistoryRecordList;
 import static io.flutter.plugins.inapppurchase.Translator.fromPurchasesList;
 import static io.flutter.plugins.inapppurchase.Translator.fromSkuDetailsList;
@@ -25,10 +26,13 @@ import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.PriceChangeFlowParams;
+import com.android.billingclient.api.ProductDetails;
+import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchaseHistoryRecord;
 import com.android.billingclient.api.PurchaseHistoryResponseListener;
 import com.android.billingclient.api.PurchasesResponseListener;
+import com.android.billingclient.api.QueryProductDetailsParams;
 import com.android.billingclient.api.QueryPurchaseHistoryParams;
 import com.android.billingclient.api.QueryPurchasesParams;
 import com.android.billingclient.api.SkuDetails;
@@ -36,6 +40,8 @@ import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +62,7 @@ class MethodCallHandlerImpl
   private final MethodChannel methodChannel;
 
   private HashMap<String, SkuDetails> cachedSkus = new HashMap<>();
+  private HashMap<String, ProductDetails> cachedProductDetails = new HashMap<>();
 
   /** Constructs the MethodCallHandlerImpl */
   MethodCallHandlerImpl(
@@ -209,6 +216,30 @@ class MethodCallHandlerImpl
         });
   }
 
+  private void queryProductDetailsAsync(
+          final List<QueryProductDetailsParams.Product> productList, final MethodChannel.Result result) {
+    if (billingClientError(result)) {
+      return;
+    }
+
+    QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder()
+            .setProductList(productList)
+            .build();
+
+    if(billingClient == null) return;
+
+    billingClient.queryProductDetailsAsync(
+            params,
+            (billingResult, productDetailsList) -> {
+              updateCachedProductDetails(productDetailsList);
+
+              final Map<String, Object> response = new HashMap<>();
+              response.put("billingResult", Translator.fromBillingResult(billingResult));
+              response.put("productDetails", fromProductDetailsList(productDetailsList));
+              result.success(response);
+            });
+  }
+
   private void launchBillingFlow(
       String sku,
       @Nullable String accountId,
@@ -275,6 +306,73 @@ class MethodCallHandlerImpl
       subscriptionUpdateParamsBuilder.setReplaceProrationMode(prorationMode);
       paramsBuilder.setSubscriptionUpdateParams(subscriptionUpdateParamsBuilder.build());
     }
+    result.success(
+        Translator.fromBillingResult(
+            billingClient.launchBillingFlow(activity, paramsBuilder.build())));
+  }
+
+  private void launchBillingFlowNew(
+      String offerToken,
+      String productId,
+      @Nullable String accountId,
+      @Nullable String obfuscatedProfileId,
+      MethodChannel.Result result) {
+    if (billingClientError(result)) {
+      return;
+    }
+
+    ProductDetails productDetails = cachedProductDetails.get(productId);
+    if (productDetails == null) {
+      result.error(
+              "NOT_FOUND",
+              String.format(
+                      "Details for offerToken %s and productId %s are not available. It might because skus were not fetched prior to the call.",
+                      offerToken, productId),
+              null);
+      return;
+    }
+
+    if (activity == null) {
+      result.error(
+              "ACTIVITY_UNAVAILABLE",
+              "This method must be run with the app in foreground.",
+              null);
+      return;
+    }
+
+    ArrayList<BillingFlowParams.ProductDetailsParams> productDetailsParamsList = new ArrayList<>();;
+    productDetailsParamsList.add( BillingFlowParams.ProductDetailsParams.newBuilder()
+            .setProductDetails(productDetails)
+            .setOfferToken(offerToken)
+            .build());
+
+    BillingFlowParams.Builder paramsBuilder =
+            BillingFlowParams.newBuilder().setProductDetailsParamsList(productDetailsParamsList);
+
+    if (accountId != null && !accountId.isEmpty()) {
+      paramsBuilder.setObfuscatedAccountId(accountId);
+    }
+    if (obfuscatedProfileId != null && !obfuscatedProfileId.isEmpty()) {
+      paramsBuilder.setObfuscatedProfileId(obfuscatedProfileId);
+    }
+
+    // TODO subscription update
+//    if (oldSku != null && !oldSku.isEmpty() && purchaseToken != null) {
+//      subscriptionUpdateParamsBuilder.setOldPurchaseToken(purchaseToken);
+//      // The proration mode value has to match one of the following declared in
+//      // https://developer.android.com/reference/com/android/billingclient/api/BillingFlowParams.ProrationMode
+//      subscriptionUpdateParamsBuilder.setReplaceProrationMode(prorationMode);
+//      paramsBuilder.setSubscriptionUpdateParams(subscriptionUpdateParamsBuilder.build());
+//    }
+
+    if (billingClient == null) {
+      result.error(
+              "BILLING_CLIENT_UNAVAILABLE",
+              "Billing client missing",
+              null);
+      return;
+    }
+
     result.success(
         Translator.fromBillingResult(
             billingClient.launchBillingFlow(activity, paramsBuilder.build())));
@@ -408,6 +506,16 @@ class MethodCallHandlerImpl
 
     for (SkuDetails skuDetails : skuDetailsList) {
       cachedSkus.put(skuDetails.getSku(), skuDetails);
+    }
+  }
+
+  private void updateCachedProductDetails(@Nullable List<ProductDetails> productDetailsList) {
+    if (productDetailsList == null) {
+      return;
+    }
+
+    for (ProductDetails productDetails : productDetailsList) {
+      cachedProductDetails.put(productDetails.getProductId(), productDetails);
     }
   }
 

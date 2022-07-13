@@ -7,6 +7,7 @@ package io.flutter.plugins.inapppurchase;
 import androidx.annotation.Nullable;
 import com.android.billingclient.api.AccountIdentifiers;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchaseHistoryRecord;
 import com.android.billingclient.api.SkuDetails;
@@ -38,6 +39,99 @@ import java.util.Locale;
     info.put("originalPrice", detail.getOriginalPrice());
     info.put("originalPriceAmountMicros", detail.getOriginalPriceAmountMicros());
     return info;
+  }
+
+  static HashMap<String, Object> fromProductDetail(ProductDetails detail) {
+    HashMap<String, Object> info = new HashMap<>();
+
+    info.put("title", detail.getTitle());
+    info.put("description", detail.getDescription());
+    info.put("subscriptionOfferDetails", fromSubscriptionOfferDetailsList(detail.getSubscriptionOfferDetails()));
+    info.put("oneTimePurchaseOfferDetails", fromOneTimePurchaseOfferDetails(detail.getOneTimePurchaseOfferDetails()));
+    info.put("productId", detail.getProductId());
+    info.put("name", detail.getName());
+    info.put("productType", detail.getProductType());
+
+    return info;
+  }
+
+  static HashMap<String, Object> fromOneTimePurchaseOfferDetails(
+      @Nullable ProductDetails.OneTimePurchaseOfferDetails details) {
+    HashMap<String, Object> info = new HashMap<>();
+
+    if(details == null) {
+      return info;
+    }
+
+    info.put("formattedPrice", details.getFormattedPrice());
+    info.put("priceAmountMicros", details.getPriceAmountMicros());
+    info.put("priceCurrencyCode", details.getPriceCurrencyCode());
+
+    return info;
+  }
+
+  static List<HashMap<String, Object>> fromSubscriptionOfferDetailsList(
+         @Nullable List<ProductDetails.SubscriptionOfferDetails> subscriptionOfferDetailsList) {
+    if (subscriptionOfferDetailsList == null) {
+      return Collections.emptyList();
+    }
+
+    ArrayList<HashMap<String, Object>> output = new ArrayList<>();
+
+    for(ProductDetails.SubscriptionOfferDetails offerDetails: subscriptionOfferDetailsList) {
+      output.add(fromSubscriptionOfferDetails(offerDetails));
+    }
+
+    return output;
+  }
+
+  static HashMap<String, Object> fromSubscriptionOfferDetails(
+          ProductDetails.SubscriptionOfferDetails offerDetails) {
+    HashMap<String, Object> info = new HashMap<>();
+
+    info.put("installmentPlanDetails", offerDetails.getInstallmentPlanDetails());
+    info.put("offerTags",offerDetails.getOfferTags());
+    info.put("offerToken", offerDetails.getOfferToken());
+    info.put("pricingPhases", fromPricingPhasesList(offerDetails.getPricingPhases().getPricingPhaseList()));
+
+    return info;
+  }
+
+  static List<HashMap<String, Object>> fromPricingPhasesList(
+          List<ProductDetails.PricingPhase> pricingPhasesList) {
+    ArrayList<HashMap<String, Object>> output = new ArrayList<>();
+
+    for(ProductDetails.PricingPhase phase: pricingPhasesList) {
+      output.add(fromPricingPhase(phase));
+    }
+
+    return output;
+  }
+
+  static HashMap<String, Object> fromPricingPhase(ProductDetails.PricingPhase pricingPhase) {
+    HashMap<String, Object> info = new HashMap<>();
+
+    info.put("billingCycleCount", pricingPhase.getBillingCycleCount());
+    info.put("billingPeriod", pricingPhase.getBillingPeriod());
+    info.put("priceAmountMicros", pricingPhase.getPriceAmountMicros());
+    info.put("priceCurrencyCode", pricingPhase.getPriceCurrencyCode());
+    info.put("formattedPrice", pricingPhase.getFormattedPrice());
+    info.put("recurrenceMode", pricingPhase.getRecurrenceMode());
+
+    return info;
+  }
+
+  static List<HashMap<String, Object>> fromProductDetailsList(
+      @Nullable List<ProductDetails> productDetailsList) {
+    if (productDetailsList == null) {
+      return Collections.emptyList();
+    }
+
+    ArrayList<HashMap<String, Object>> output = new ArrayList<>();
+    for (ProductDetails detail : productDetailsList) {
+      output.add(fromProductDetail(detail));
+    }
+    return output;
   }
 
   static List<HashMap<String, Object>> fromSkuDetailsList(
