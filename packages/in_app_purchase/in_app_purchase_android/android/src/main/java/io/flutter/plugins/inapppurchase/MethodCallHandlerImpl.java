@@ -14,8 +14,10 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import com.android.billingclient.api.AcknowledgePurchaseParams;
 import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
@@ -27,7 +29,6 @@ import com.android.billingclient.api.ConsumeParams;
 import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.PriceChangeFlowParams;
 import com.android.billingclient.api.ProductDetails;
-import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchaseHistoryRecord;
 import com.android.billingclient.api.PurchaseHistoryResponseListener;
@@ -38,13 +39,14 @@ import com.android.billingclient.api.QueryPurchasesParams;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
 
 /** Handles method channel for the plugin. */
 class MethodCallHandlerImpl
@@ -130,6 +132,10 @@ class MethodCallHandlerImpl
         List<String> skusList = call.argument("skusList");
         querySkuDetailsAsync((String) call.argument("skuType"), skusList, result);
         break;
+      case InAppPurchasePlugin.MethodNames.QUERY_PRODUCT_DETAILS:
+        List<String> productIds = call.argument("productIds");
+        querySkuDetailsAsync((String) call.argument("productType"), productIds, result);
+        break;
       case InAppPurchasePlugin.MethodNames.LAUNCH_BILLING_FLOW:
         launchBillingFlow(
             (String) call.argument("sku"),
@@ -140,6 +146,14 @@ class MethodCallHandlerImpl
             call.hasArgument("prorationMode")
                 ? (int) call.argument("prorationMode")
                 : ProrationMode.UNKNOWN_SUBSCRIPTION_UPGRADE_DOWNGRADE_POLICY,
+            result);
+        break;
+      case InAppPurchasePlugin.MethodNames.LAUNCH_BILLING_FLOW_NEW:
+        launchBillingFlowNew(
+            (String) call.argument("offerToken"),
+            (String) call.argument("productId"),
+            (String) call.argument("accountId"),
+            (String) call.argument("obfuscatedProfileId"),
             result);
         break;
       case InAppPurchasePlugin.MethodNames.QUERY_PURCHASES: // Legacy method name.
@@ -217,16 +231,26 @@ class MethodCallHandlerImpl
   }
 
   private void queryProductDetailsAsync(
-          final List<QueryProductDetailsParams.Product> productList, final MethodChannel.Result result) {
+         final String productType, final List<String> productIdsList, final MethodChannel.Result result) {
     if (billingClientError(result)) {
       return;
+    }
+
+    ArrayList<QueryProductDetailsParams.Product> productList = new ArrayList<>();
+    for (String id : productIdsList) {
+      productList.add(QueryProductDetailsParams.Product
+              .newBuilder()
+              .setProductId(id)
+              .setProductType(productType)
+              .build()
+      );
     }
 
     QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder()
             .setProductList(productList)
             .build();
 
-    if(billingClient == null) return;
+    if (billingClient == null) return;
 
     billingClient.queryProductDetailsAsync(
             params,
