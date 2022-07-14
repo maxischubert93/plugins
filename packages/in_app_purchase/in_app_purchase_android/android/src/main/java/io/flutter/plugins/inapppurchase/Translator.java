@@ -89,7 +89,7 @@ import java.util.Locale;
           ProductDetails.SubscriptionOfferDetails offerDetails) {
     HashMap<String, Object> info = new HashMap<>();
 
-    info.put("installmentPlanDetails", offerDetails.getInstallmentPlanDetails());
+    //info.put("installmentPlanDetails", offerDetails.getInstallmentPlanDetails());
     info.put("offerTags",offerDetails.getOfferTags());
     info.put("offerToken", offerDetails.getOfferToken());
     info.put("pricingPhases", fromPricingPhasesList(offerDetails.getPricingPhases().getPricingPhaseList()));
@@ -156,6 +156,7 @@ import java.util.Locale;
     info.put("purchaseToken", purchase.getPurchaseToken());
     info.put("signature", purchase.getSignature());
     info.put("skus", skus);
+    info.put("products", purchase.getProducts());
     info.put("isAutoRenewing", purchase.isAutoRenewing());
     info.put("originalJson", purchase.getOriginalJson());
     info.put("developerPayload", purchase.getDeveloperPayload());

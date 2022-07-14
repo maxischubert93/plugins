@@ -35,6 +35,7 @@ class PurchaseWrapper {
     required this.signature,
     @Deprecated('Use skus instead') String? sku,
     required this.skus,
+    required this.products,
     required this.isAutoRenewing,
     required this.originalJson,
     this.developerPayload,
@@ -112,6 +113,10 @@ class PurchaseWrapper {
   /// The product IDs of this purchase.
   @JsonKey(defaultValue: <String>[])
   final List<String> skus;
+
+  /// The product IDs of this purchase.
+  @JsonKey(defaultValue: <String>[])
+  final List<String> products;
 
   /// True for subscriptions that renew automatically. Does not apply to
   /// [SkuType.inapp] products.

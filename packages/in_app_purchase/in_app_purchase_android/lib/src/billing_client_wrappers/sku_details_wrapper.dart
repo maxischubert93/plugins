@@ -3,6 +3,7 @@
 // found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
+import 'package:in_app_purchase_android/billing_client_wrappers.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'billing_client_wrapper.dart';

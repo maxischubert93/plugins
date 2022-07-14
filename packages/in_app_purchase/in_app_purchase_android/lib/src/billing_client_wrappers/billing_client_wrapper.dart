@@ -10,6 +10,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../billing_client_wrappers.dart';
 import '../channel.dart';
+import 'product_details_wrapper.dart';
 
 part 'billing_client_wrapper.g.dart';
 
@@ -149,6 +150,39 @@ class BillingClient {
         <String, dynamic>{});
   }
 
+  /// Returns a list of [SkuDetailsWrapper]s that have [SkuDetailsWrapper.sku]
+  /// in `skusList`, and [SkuDetailsWrapper.type] matching `skuType`.
+  ///
+  /// Calls through to [`BillingClient#querySkuDetailsAsync(SkuDetailsParams,
+  /// SkuDetailsResponseListener)`](https://developer.android.com/reference/com/android/billingclient/api/BillingClient#querySkuDetailsAsync(com.android.billingclient.api.SkuDetailsParams,%20com.android.billingclient.api.SkuDetailsResponseListener))
+  /// Instead of taking a callback parameter, it returns a Future
+  /// [SkuDetailsResponseWrapper]. It also takes the values of
+  /// `SkuDetailsParams` as direct arguments instead of requiring it constructed
+  /// and passed in as a class.
+  Future<ProductDetailsResponseWrapper> queryProductDetails(
+      {required ProductType productType,
+      required List<String> productIds}) async {
+    final String productTypeString;
+    switch (productType) {
+      case ProductType.subs:
+        productTypeString = 'subs';
+        break;
+      case ProductType.inapp:
+        productTypeString = 'inapp';
+        break;
+    }
+
+    final Map<String, dynamic> arguments = <String, dynamic>{
+      'productType': productTypeString,
+      'productIds': productIds,
+    };
+    return ProductDetailsResponseWrapper.fromJson((await channel.invokeMapMethod<
+                String, dynamic>(
+            'BillingClient#queryProductDetailsAsync(ProductDetailsParams, ProductDetailsResponseListener)',
+            arguments)) ??
+        <String, dynamic>{});
+  }
+
   /// Attempt to launch the Play Billing Flow for a given [skuDetails].
   ///
   /// The [skuDetails] needs to have already been fetched in a [querySkuDetails]
@@ -206,6 +240,25 @@ class BillingClient {
     return BillingResultWrapper.fromJson(
         (await channel.invokeMapMethod<String, dynamic>(
                 'BillingClient#launchBillingFlow(Activity, BillingFlowParams)',
+                arguments)) ??
+            <String, dynamic>{});
+  }
+
+  Future<BillingResultWrapper> launchBillingFlowNew({
+    required String offerToken,
+    required String productId,
+    String? accountId,
+    String? obfuscatedProfileId,
+  }) async {
+    final Map<String, dynamic> arguments = <String, dynamic>{
+      'offerToken': offerToken,
+      'productId': productId,
+      'accountId': accountId,
+      'obfuscatedProfileId': obfuscatedProfileId,
+    };
+    return BillingResultWrapper.fromJson(
+        (await channel.invokeMapMethod<String, dynamic>(
+                'BillingClient#launchBillingFlowNew(Activity, BillingFlowParams)',
                 arguments)) ??
             <String, dynamic>{});
   }
@@ -445,6 +498,21 @@ class BillingResponseConverter implements JsonConverter<BillingResponse, int?> {
 /// See the linked documentation for an explanation of the different constants.
 @JsonEnum(alwaysCreate: true)
 enum SkuType {
+  // WARNING: Changes to this class need to be reflected in our generated code.
+  // Run `flutter packages pub run build_runner watch` to rebuild and watch for
+  // further changes.
+
+  /// A one time product. Acquired in a single transaction.
+  @JsonValue('inapp')
+  inapp,
+
+  /// A product requiring a recurring charge over time.
+  @JsonValue('subs')
+  subs,
+}
+
+@JsonEnum(alwaysCreate: true)
+enum ProductType {
   // WARNING: Changes to this class need to be reflected in our generated code.
   // Run `flutter packages pub run build_runner watch` to rebuild and watch for
   // further changes.
