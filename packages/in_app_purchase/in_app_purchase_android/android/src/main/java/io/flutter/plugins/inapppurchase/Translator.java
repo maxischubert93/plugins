@@ -52,7 +52,7 @@ import java.util.Locale;
 
     final ProductDetails.OneTimePurchaseOfferDetails otpDetails = detail.getOneTimePurchaseOfferDetails();
     if (otpDetails != null) {
-      info.put("oneTimePurchaseOfferDetails", fromOneTimePurchaseOfferDetails(otpDetails);
+      info.put("oneTimePurchaseOfferDetails", fromOneTimePurchaseOfferDetails(otpDetails));
     }
 
     info.put("productId", detail.getProductId());
