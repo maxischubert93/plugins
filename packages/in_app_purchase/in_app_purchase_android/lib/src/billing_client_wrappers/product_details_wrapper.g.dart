@@ -34,7 +34,7 @@ ProductDetailsResponseWrapper _$ProductDetailsResponseWrapperFromJson(
           BillingResultWrapper.fromJson((json['billingResult'] as Map?)?.map(
         (k, e) => MapEntry(k as String, e),
       )),
-      productDetailsList: (json['productDetailsList'] as List<dynamic>?)
+      productDetailsList: (json['productDetails'] as List<dynamic>?)
               ?.map((e) => ProductDetailsWrapper.fromJson(
                   Map<String, dynamic>.from(e as Map)))
               .toList() ??

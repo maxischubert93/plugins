@@ -26,6 +26,11 @@ const _$SkuTypeEnumMap = {
   SkuType.subs: 'subs',
 };
 
+const _$ProductTypeEnumMap = {
+  ProductType.inapp: 'inapp',
+  ProductType.subs: 'subs',
+};
+
 const _$ProrationModeEnumMap = {
   ProrationMode.unknownSubscriptionUpgradeDowngradePolicy: 0,
   ProrationMode.immediateWithTimeProration: 1,

@@ -109,7 +109,7 @@ class ProductDetailsResponseWrapper {
   final BillingResultWrapper billingResult;
 
   /// A list of [ProductDetailsWrapper] matching the query to [BillingClient.querySkuDetails].
-  @JsonKey(defaultValue: <ProductDetailsWrapper>[])
+  @JsonKey(name: 'productDetails',defaultValue: <ProductDetailsWrapper>[])
   final List<ProductDetailsWrapper> productDetailsList;
 
   @override
