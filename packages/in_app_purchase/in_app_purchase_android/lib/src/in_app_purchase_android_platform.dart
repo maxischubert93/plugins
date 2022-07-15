@@ -75,35 +75,35 @@ class InAppPurchaseAndroidPlatform extends InAppPurchasePlatform {
   @override
   Future<ProductDetailsResponse> queryProductDetails(
       Set<String> identifiers) async {
-    List<SkuDetailsResponseWrapper> responses;
+    List<ProductDetailsResponseWrapper> responses;
     PlatformException? exception;
     try {
-      responses = await Future.wait(<Future<SkuDetailsResponseWrapper>>[
-        billingClient.querySkuDetails(
-            skuType: SkuType.inapp, skusList: identifiers.toList()),
-        billingClient.querySkuDetails(
-            skuType: SkuType.subs, skusList: identifiers.toList())
+      responses = await Future.wait(<Future<ProductDetailsResponseWrapper>>[
+        billingClient.queryProductDetails(
+            productType: ProductType.inapp, productIds: identifiers.toList()),
+        billingClient.queryProductDetails(
+            productType: ProductType.subs, productIds: identifiers.toList())
       ]);
     } on PlatformException catch (e) {
       exception = e;
-      responses = <SkuDetailsResponseWrapper>[
+      responses = <ProductDetailsResponseWrapper>[
         // ignore: invalid_use_of_visible_for_testing_member
-        SkuDetailsResponseWrapper(
+        ProductDetailsResponseWrapper(
             billingResult: BillingResultWrapper(
                 responseCode: BillingResponse.error, debugMessage: e.code),
-            skuDetailsList: const <SkuDetailsWrapper>[]),
+            productDetailsList: const <ProductDetailsWrapper>[]),
         // ignore: invalid_use_of_visible_for_testing_member
-        SkuDetailsResponseWrapper(
+        ProductDetailsResponseWrapper(
             billingResult: BillingResultWrapper(
                 responseCode: BillingResponse.error, debugMessage: e.code),
-            skuDetailsList: const <SkuDetailsWrapper>[])
+            productDetailsList: const <ProductDetailsWrapper>[])
       ];
     }
     final List<ProductDetails> productDetailsList =
-        responses.expand((SkuDetailsResponseWrapper response) {
-      return response.skuDetailsList;
-    }).map((SkuDetailsWrapper skuDetailWrapper) {
-      return GooglePlayProductDetails.fromSkuDetails(skuDetailWrapper);
+        responses.expand((ProductDetailsResponseWrapper response) {
+      return response.productDetailsList;
+    }).map((ProductDetailsWrapper productDetailsWrapper) {
+      return GooglePlayProductDetails.fromProductDetails(productDetailsWrapper);
     }).toList();
 
     final Set<String> successIDS = productDetailsList

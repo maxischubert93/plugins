@@ -253,14 +253,14 @@ class _MyAppState extends State<_MyApp> {
                       final InAppPurchaseAndroidPlatformAddition addition =
                           InAppPurchasePlatformAddition.instance!
                               as InAppPurchaseAndroidPlatformAddition;
-                      final SkuDetailsWrapper skuDetails =
+                      final ProductDetailsWrapper skuDetails =
                           (productDetails as GooglePlayProductDetails)
-                              .skuDetails;
-                      addition
+                              .productDetails;
+                     /* addition
                           .launchPriceChangeConfirmationFlow(
                               sku: skuDetails.sku)
                           .then((BillingResultWrapper value) => print(
-                              'confirmationResponse: ${value.responseCode}'));
+                              'confirmationResponse: ${value.responseCode}'));*/
                     },
                     icon: const Icon(Icons.upgrade))
                 : TextButton(
@@ -298,7 +298,7 @@ class _MyAppState extends State<_MyApp> {
                             purchaseParam: purchaseParam);
                       }
                     },
-                    child: Text(productDetails.price),
+                    child: Text(productDetails.title),
                   ));
       },
     ));
