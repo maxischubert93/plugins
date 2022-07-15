@@ -57,8 +57,7 @@ class ProductDetailsWrapper {
   final List<SubscriptionOfferDetails> subscriptionOfferDetails;
 
   /// Trial period in ISO 8601 format.
-  @JsonKey(defaultValue: <OneTimePurchaseOfferDetails>[])
-  final List<OneTimePurchaseOfferDetails> oneTimePurchaseOfferDetails;
+  final OneTimePurchaseOfferDetails? oneTimePurchaseOfferDetails;
 
   @override
   bool operator ==(Object other) {

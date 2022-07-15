@@ -16,12 +16,10 @@ ProductDetailsWrapper _$ProductDetailsWrapperFromJson(Map json) =>
                       Map<String, dynamic>.from(e as Map)))
                   .toList() ??
               [],
-      oneTimePurchaseOfferDetails:
-          (json['oneTimePurchaseOfferDetails'] as List<dynamic>?)
-                  ?.map((e) => OneTimePurchaseOfferDetails.fromJson(
-                      Map<String, dynamic>.from(e as Map)))
-                  .toList() ??
-              [],
+      oneTimePurchaseOfferDetails: json['oneTimePurchaseOfferDetails'] == null
+          ? null
+          : OneTimePurchaseOfferDetails.fromJson(Map<String, dynamic>.from(
+              json['oneTimePurchaseOfferDetails'] as Map)),
       productId: json['productId'] as String? ?? '',
       name: json['name'] as String? ?? '',
       productType: json['productType'] as String? ?? '',
