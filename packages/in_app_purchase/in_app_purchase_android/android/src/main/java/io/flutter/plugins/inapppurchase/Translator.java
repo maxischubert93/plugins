@@ -5,12 +5,14 @@
 package io.flutter.plugins.inapppurchase;
 
 import androidx.annotation.Nullable;
+
 import com.android.billingclient.api.AccountIdentifiers;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchaseHistoryRecord;
 import com.android.billingclient.api.SkuDetails;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Currency;
@@ -47,7 +49,12 @@ import java.util.Locale;
     info.put("title", detail.getTitle());
     info.put("description", detail.getDescription());
     info.put("subscriptionOfferDetails", fromSubscriptionOfferDetailsList(detail.getSubscriptionOfferDetails()));
-    info.put("oneTimePurchaseOfferDetails", fromOneTimePurchaseOfferDetails(detail.getOneTimePurchaseOfferDetails()));
+
+    final ProductDetails.OneTimePurchaseOfferDetails otpDetails = detail.getOneTimePurchaseOfferDetails();
+    if (otpDetails != null) {
+      info.put("oneTimePurchaseOfferDetails", fromOneTimePurchaseOfferDetails(otpDetails);
+    }
+
     info.put("productId", detail.getProductId());
     info.put("name", detail.getName());
     info.put("productType", detail.getProductType());
@@ -56,12 +63,8 @@ import java.util.Locale;
   }
 
   static HashMap<String, Object> fromOneTimePurchaseOfferDetails(
-      @Nullable ProductDetails.OneTimePurchaseOfferDetails details) {
+      ProductDetails.OneTimePurchaseOfferDetails details) {
     HashMap<String, Object> info = new HashMap<>();
-
-    if(details == null) {
-      return info;
-    }
 
     info.put("formattedPrice", details.getFormattedPrice());
     info.put("priceAmountMicros", details.getPriceAmountMicros());
