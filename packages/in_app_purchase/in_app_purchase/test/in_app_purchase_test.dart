@@ -15,9 +15,6 @@ void main() {
       id: 'id',
       title: 'title',
       description: 'description',
-      price: 'price',
-      rawPrice: 0.0,
-      currencyCode: 'currencyCode',
     );
 
     final PurchaseDetails purchaseDetails = PurchaseDetails(

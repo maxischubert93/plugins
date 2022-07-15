@@ -301,7 +301,7 @@ class _MyAppState extends State<_MyApp> {
                           purchaseParam: purchaseParam);
                     }
                   },
-                  child: Text(productDetails.price),
+                  child: Text(productDetails.title),
                 ),
         );
       },

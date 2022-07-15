@@ -10,10 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   in_app_purchase:
-    git:
-      url: https://github.com/maxischubert93/plugins.git
-      path: packages/in_app_purchase/in_app_purchase
-      ref: new-billing-flow
+    path: ../
   shared_preferences: ^2.0.0
 
 dev_dependencies:
