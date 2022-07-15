@@ -81,6 +81,8 @@ import java.util.Locale;
       return Collections.emptyList();
     }
 
+    Log.d("TAG", "fromSubscriptionOfferDetailsList: " + subscriptionOfferDetailsList.size());
+
     ArrayList<HashMap<String, Object>> output = new ArrayList<>();
 
     for(ProductDetails.SubscriptionOfferDetails offerDetails: subscriptionOfferDetailsList) {
@@ -105,7 +107,7 @@ import java.util.Locale;
           List<ProductDetails.PricingPhase> pricingPhasesList) {
     ArrayList<HashMap<String, Object>> output = new ArrayList<>();
 
-    Log.d("TAG", "fromPricingPhasesList: " + pricingPhasesList.toString());
+    Log.d("TAG", "fromPricingPhasesList: " + pricingPhasesList.size());
 
     for(ProductDetails.PricingPhase phase: pricingPhasesList) {
       output.add(fromPricingPhase(phase));
