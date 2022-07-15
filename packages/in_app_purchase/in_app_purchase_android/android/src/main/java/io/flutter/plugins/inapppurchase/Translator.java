@@ -4,6 +4,8 @@
 
 package io.flutter.plugins.inapppurchase;
 
+import android.util.Log;
+
 import androidx.annotation.Nullable;
 
 import com.android.billingclient.api.AccountIdentifiers;
@@ -92,7 +94,6 @@ import java.util.Locale;
           ProductDetails.SubscriptionOfferDetails offerDetails) {
     HashMap<String, Object> info = new HashMap<>();
 
-    //info.put("installmentPlanDetails", offerDetails.getInstallmentPlanDetails());
     info.put("offerTags",offerDetails.getOfferTags());
     info.put("offerToken", offerDetails.getOfferToken());
     info.put("pricingPhases", fromPricingPhasesList(offerDetails.getPricingPhases().getPricingPhaseList()));
@@ -103,6 +104,8 @@ import java.util.Locale;
   static List<HashMap<String, Object>> fromPricingPhasesList(
           List<ProductDetails.PricingPhase> pricingPhasesList) {
     ArrayList<HashMap<String, Object>> output = new ArrayList<>();
+
+    Log.d("TAG", "fromPricingPhasesList: " + pricingPhasesList.toString());
 
     for(ProductDetails.PricingPhase phase: pricingPhasesList) {
       output.add(fromPricingPhase(phase));
