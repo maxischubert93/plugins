@@ -12,6 +12,10 @@ environment:
 flutter:
   plugin:
     implements: in_app_purchase
+    git:
+      url: https://github.com/maxischubert93/plugins.git
+      path: packages/in_app_purchase/in_app_purchase
+      ref: new-billing-flow
     platforms:
       ios:
         pluginClass: InAppPurchasePlugin
