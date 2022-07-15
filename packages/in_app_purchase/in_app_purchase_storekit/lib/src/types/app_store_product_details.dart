@@ -15,19 +15,11 @@ class AppStoreProductDetails extends ProductDetails {
     required String id,
     required String title,
     required String description,
-    required String price,
-    required double rawPrice,
-    required String currencyCode,
     required this.skProduct,
-    required String currencySymbol,
   }) : super(
           id: id,
           title: title,
           description: description,
-          price: price,
-          rawPrice: rawPrice,
-          currencyCode: currencyCode,
-          currencySymbol: currencySymbol,
         );
 
   /// Generate a [AppStoreProductDetails] object based on an iOS [SKProductWrapper] object.
@@ -36,12 +28,6 @@ class AppStoreProductDetails extends ProductDetails {
       id: product.productIdentifier,
       title: product.localizedTitle,
       description: product.localizedDescription,
-      price: product.priceLocale.currencySymbol + product.price,
-      rawPrice: double.parse(product.price),
-      currencyCode: product.priceLocale.currencyCode,
-      currencySymbol: product.priceLocale.currencySymbol.isNotEmpty
-          ? product.priceLocale.currencySymbol
-          : product.priceLocale.currencyCode,
       skProduct: product,
     );
   }

@@ -51,8 +51,6 @@ void main() {
       expect(products[1].id, '456');
       expect(response.notFoundIDs, <String>['789']);
       expect(response.error, isNull);
-      expect(response.productDetails.first.currencySymbol, r'$');
-      expect(response.productDetails[1].currencySymbol, 'EUR');
     });
 
     test(

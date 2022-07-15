@@ -95,7 +95,6 @@ void main() {
       expect(product.title, wrapper.localizedTitle);
       expect(product.description, wrapper.localizedDescription);
       expect(product.id, wrapper.productIdentifier);
-      expect(product.price, wrapper.priceLocale.currencySymbol + wrapper.price);
       expect(product.skProduct, wrapper);
     });
 
