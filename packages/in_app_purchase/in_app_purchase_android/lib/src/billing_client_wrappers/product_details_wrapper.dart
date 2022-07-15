@@ -222,7 +222,7 @@ class PricingPhase {
   final int priceAmountMicros;
   final String priceCurrencyCode;
   final String formattedPrice;
-  final String recurrenceMode;
+  final int recurrenceMode;
 
   @override
   bool operator ==(Object other) {

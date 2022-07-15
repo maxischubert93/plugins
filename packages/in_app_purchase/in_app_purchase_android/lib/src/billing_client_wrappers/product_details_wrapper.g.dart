@@ -68,5 +68,5 @@ PricingPhase _$PricingPhaseFromJson(Map json) => PricingPhase(
       priceAmountMicros: json['priceAmountMicros'] as int,
       priceCurrencyCode: json['priceCurrencyCode'] as String,
       formattedPrice: json['formattedPrice'] as String,
-      recurrenceMode: json['recurrenceMode'] as String,
+      recurrenceMode: json['recurrenceMode'] as int,
     );
