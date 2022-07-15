@@ -25,7 +25,11 @@ dependencies:
       url: https://github.com/maxischubert93/plugins.git
       path: packages/in_app_purchase/in_app_purchase_android
       ref: new-billing-flow
-  in_app_purchase_platform_interface: ^1.0.0
+  in_app_purchase_platform_interface:
+    git:
+      url: https://github.com/maxischubert93/plugins.git
+      path: packages/in_app_purchase/in_app_purchase_platform_interface
+      ref: new-billing-flow
   in_app_purchase_storekit:
     git:
       url: https://github.com/maxischubert93/plugins.git
