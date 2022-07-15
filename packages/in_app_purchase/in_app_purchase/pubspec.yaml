@@ -14,8 +14,16 @@ flutter:
     platforms:
       android:
         default_package: in_app_purchase_android
+        git:
+          url: https://github.com/maxischubert93/plugins.git
+          path: packages/in_app_purchase/in_app_purchase_android
+          ref: new-billing-flow
       ios:
         default_package: in_app_purchase_storekit
+        git:
+          url: https://github.com/maxischubert93/plugins.git
+          path: packages/in_app_purchase/in_app_purchase_storekit
+          ref: new-billing-flow
 
 dependencies:
   flutter:
