@@ -10,7 +10,6 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../../billing_client_wrappers.dart';
 import '../channel.dart';
-import 'product_details_wrapper.dart';
 
 part 'billing_client_wrapper.g.dart';
 
@@ -256,11 +255,11 @@ class BillingClient {
       'accountId': accountId,
       'obfuscatedProfileId': obfuscatedProfileId,
     };
-    return BillingResultWrapper.fromJson(
-        (await channel.invokeMapMethod<String, dynamic>(
-                'BillingClient#launchBillingFlowNew(Activity, BillingFlowParams)',
-                arguments)) ??
-            <String, dynamic>{});
+    return BillingResultWrapper.fromJson((await channel.invokeMapMethod<String,
+                dynamic>(
+            'BillingClient#launchBillingFlowNew(Activity, BillingFlowParams)',
+            arguments)) ??
+        <String, dynamic>{});
   }
 
   /// Fetches recent purchases for the given [SkuType].

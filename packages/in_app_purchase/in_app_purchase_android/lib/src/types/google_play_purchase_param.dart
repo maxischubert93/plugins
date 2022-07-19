@@ -4,21 +4,18 @@
 
 import 'package:in_app_purchase_platform_interface/in_app_purchase_platform_interface.dart';
 
-import '../../in_app_purchase_android.dart';
-
 /// Google Play specific parameter object for generating a purchase.
 class GooglePlayPurchaseParam extends PurchaseParam {
   /// Creates a new [GooglePlayPurchaseParam] object with the given data.
   GooglePlayPurchaseParam({
     required ProductDetails productDetails,
+    required this.offerToken,
     String? applicationUserName,
-    this.changeSubscriptionParam,
   }) : super(
           productDetails: productDetails,
           applicationUserName: applicationUserName,
         );
 
-  /// The 'changeSubscriptionParam' containing information for upgrading or
-  /// downgrading an existing subscription.
-  final ChangeSubscriptionParam? changeSubscriptionParam;
+  /// The offerToken identifying the specific offer to buy from the product
+  final String offerToken;
 }

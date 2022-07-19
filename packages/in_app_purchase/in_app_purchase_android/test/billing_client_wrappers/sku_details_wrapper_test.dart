@@ -3,7 +3,6 @@
 // found in the LICENSE file.
 
 import 'package:in_app_purchase_android/billing_client_wrappers.dart';
-import 'package:in_app_purchase_android/src/types/google_play_product_details.dart';
 import 'package:test/test.dart';
 
 const SkuDetailsWrapper dummySkuDetails = SkuDetailsWrapper(

@@ -256,7 +256,7 @@ class _MyAppState extends State<_MyApp> {
                       final ProductDetailsWrapper skuDetails =
                           (productDetails as GooglePlayProductDetails)
                               .productDetails;
-                     /* addition
+                      /* addition
                           .launchPriceChangeConfirmationFlow(
                               sku: skuDetails.sku)
                           .then((BillingResultWrapper value) => print(
@@ -281,14 +281,10 @@ class _MyAppState extends State<_MyApp> {
                               purchases);
                       final GooglePlayPurchaseParam purchaseParam =
                           GooglePlayPurchaseParam(
-                              productDetails: productDetails,
-                              applicationUserName: null,
-                              changeSubscriptionParam: oldSubscription != null
-                                  ? ChangeSubscriptionParam(
-                                      oldPurchaseDetails: oldSubscription,
-                                      prorationMode: ProrationMode
-                                          .immediateWithTimeProration)
-                                  : null);
+                        productDetails: productDetails,
+                        applicationUserName: null,
+                        offerToken: "offerToken",
+                      );
                       if (productDetails.id == _kConsumableId) {
                         _inAppPurchasePlatform.buyConsumable(
                             purchaseParam: purchaseParam,
