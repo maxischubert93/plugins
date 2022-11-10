@@ -442,7 +442,7 @@ class MethodCallHandlerImpl
             // as success is implied by calling this callback.
             serialized.put("responseCode", BillingClient.BillingResponseCode.OK);
             serialized.put("billingResult", Translator.fromBillingResult(billingResult));
-            serialized.put("purchaseList", fromPurchasesList(purchasesList));
+            serialized.put("purchasesList", fromPurchasesList(purchasesList));
             result.success(serialized);
           }
         });

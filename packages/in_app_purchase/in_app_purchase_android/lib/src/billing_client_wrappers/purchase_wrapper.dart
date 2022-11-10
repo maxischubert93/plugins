@@ -107,6 +107,7 @@ class PurchaseWrapper {
 
   /// The product ID of this purchase.
   @Deprecated('Use skus instead')
+  @JsonKey(ignore: true)
   String get sku => _sku ?? (skus.isNotEmpty ? skus.first : '');
   final String? _sku;
 
@@ -214,6 +215,7 @@ class PurchaseHistoryRecordWrapper {
 
   /// The product ID of this purchase.
   @Deprecated('Use skus instead')
+  @JsonKey(ignore: true)
   String get sku => _sku ?? (skus.isNotEmpty ? skus.first : '');
 
   final String? _sku;
